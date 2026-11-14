@@ -36,6 +36,8 @@ function renderTasks() {
 
     tasks.forEach(t => {
         const div = document.createElement("div");
+        const div2 = document.createElement("div");
+        const div3 = document.createElement("div");
         const task = document.createElement("span");
         const editInput = document.createElement("input");
         const checkbox = document.createElement("input");
@@ -53,14 +55,18 @@ function renderTasks() {
 
         div.dataset.id = t.id;
         div.className = "task-div";
+        div2.className = "div-2";
+        div3.className = "div-3";
         task.className = "task"
         edit.className = "edit-btn";
         del.className = "del-btn";
         editInput.className = "edit-input hide";
         save.className = "save-btn hide";
 
-        div.append(checkbox, task, editInput, save, edit, del);
-        frgmnt.appendChild(div);
+        div2.append(checkbox, task, editInput)
+        div3.append(save, edit, del)
+        div.append(div2, div3);
+        frgmnt.append(div);
     });
 
     tasksDiv.appendChild(frgmnt);
@@ -75,7 +81,6 @@ tasksDiv.addEventListener('click', e => {
 
     const taskDiv = e.target.closest(".task-div");
     if (!taskDiv) return;
-    console.log(taskDiv);
 
     const id = taskDiv.dataset.id;
 
@@ -89,11 +94,13 @@ tasksDiv.addEventListener('click', e => {
         const editInput = taskDiv.querySelector(".edit-input");
         const editBtn = taskDiv.querySelector(".edit-btn");
         const saveBtn = taskDiv.querySelector(".save-btn");
+        const delBtn = taskDiv.querySelector(".del-btn");
 
         taskSpan.classList.toggle("hide", isEditing);
         editInput.classList.toggle("hide", !isEditing);
         editBtn.classList.toggle("hide", isEditing);
         saveBtn.classList.toggle("hide", !isEditing);
+        delBtn.classList.toggle("hide", isEditing);
 
         editInput.value = taskSpan.textContent;
         editInput.focus();
@@ -108,7 +115,7 @@ tasksDiv.addEventListener('click', e => {
         }
         saveTodo();
         renderTasks();
-    } else if (e.classList.contains("chkbox")) {
+    } else if (e.target.classList.contains("chkbox")) {
         completedCount++;
         tasks = tasks.filter(t => t.id !== id);
         saveTodo();
