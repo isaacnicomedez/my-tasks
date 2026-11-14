@@ -61,4 +61,11 @@ tasksDiv.addEventListener('click', e => {
     if (!taskDiv) return;
 
     const id = taskDiv.dataset.id;
+
+    if (e.target.classList.contains("del-btn")) {
+        tasks = tasks.filter(t => t.id !== id);
+        renderTasks();
+    } else if (e.target.classList.contains("edit-btn")) {
+
+    } 
 });
