@@ -1,8 +1,10 @@
-let tasks = [];
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let completedCount = JSON.parse(localStorage.getItem("count")) || 0;
 
 // get input
 const input = document.querySelector(".input-div input");
 const btn = document.querySelector(".input-div button");
+const count = document.querySelector(".count");
 
 let inputVal = "";
 
@@ -15,10 +17,10 @@ btn.addEventListener('click', e => {
     tasks.push({
         id: crypto.randomUUID(),
         name: inputVal,
-        completed: false,
     });
     input.value = "";
     input.focus();
+    saveTodo();
     renderTasks();
 });
 
@@ -27,6 +29,8 @@ const tasksDiv = document.querySelector(".tasks-div");
 
 function renderTasks() {
     tasksDiv.innerHTML = "";
+
+    count.textContent = completedCount;
     
     const frgmnt = document.createDocumentFragment();
 
@@ -34,9 +38,13 @@ function renderTasks() {
         const div = document.createElement("div");
         const task = document.createElement("span");
         const editInput = document.createElement("input");
+        const checkbox = document.createElement("input");
         const edit = document.createElement("button");
         const save = document.createElement("button");
         const del = document.createElement("button");
+
+        checkbox.type = "checkbox";
+        checkbox.className = "chkbox";
 
         task.textContent = `${t.name.charAt(0).toUpperCase()}${t.name.slice(1)}`;
         edit.textContent = "Edit";
@@ -51,7 +59,7 @@ function renderTasks() {
         editInput.className = "edit-input hide";
         save.className = "save-btn hide";
 
-        div.append(task, editInput, save, edit, del);
+        div.append(checkbox, task, editInput, save, edit, del);
         frgmnt.appendChild(div);
     });
 
@@ -73,6 +81,7 @@ tasksDiv.addEventListener('click', e => {
 
     if (e.target.classList.contains("del-btn")) {
         tasks = tasks.filter(t => t.id !== id);
+        saveTodo();
         renderTasks();
     } else if (e.target.classList.contains("edit-btn")) {
         isEditing = true;
@@ -97,6 +106,17 @@ tasksDiv.addEventListener('click', e => {
         if (task) {
             task.name = newName;
         }
+        saveTodo();
+        renderTasks();
+    } else if (e.classList.contains("chkbox")) {
+        completedCount++;
+        tasks = tasks.filter(t => t.id !== id);
+        saveTodo();
         renderTasks();
     }
 });
+
+function saveTodo() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    localStorage.setItem("count", JSON.stringify(completedCount));
+}
