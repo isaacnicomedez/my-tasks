@@ -1,4 +1,4 @@
-const tasks = [];
+let tasks = [];
 
 // get input
 const input = document.querySelector(".input-div input");
@@ -53,3 +53,12 @@ function renderTasks() {
 }
 
 renderTasks();
+
+tasksDiv.addEventListener('click', e => {
+    e.preventDefault();
+
+    const taskDiv = e.target.closest(".task-div");
+    if (!taskDiv) return;
+
+    const id = taskDiv.dataset.id;
+});
